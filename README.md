@@ -38,3 +38,10 @@ So rather than define a virtual machine with a run list that contains the
 above recipes, *fragments* are defined.  The cookbook then includes facilities
 to *pack* these *fragments* into as many virtual machines as are required to
 host them.
+
+## Usage
+
+There is more explanation below about the many variables that may be used to
+control the packing process.  However, a simle example will help in getting
+used to the ideas.
+
