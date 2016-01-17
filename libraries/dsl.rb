@@ -16,7 +16,7 @@ module Fragments
       {
         'machines' => machines,
         'basename' => basename,
-        'packer' => packer,
+        'packer' => packer_name,
         'driver' => driver
       }
     end

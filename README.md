@@ -38,6 +38,9 @@ end
 packer 'default' do
   action [:pack, :verify]
 end
+
+# Vendor the necessary cookbooks
+berkshelf 'default'
 ```
 
 So rather than define a virtual machine with a run list that contains the

@@ -12,6 +12,9 @@ property :driver, String, required: true
 # Chef supermarket URL
 property :supermarket_url, String, default: 'https://supermarket.chef.io'
 
+# The domain name to use for the virtual machines
+property :domain_name, String, default: 'local'
+
 action :create do
   converge_by "Creating cluster called '#{new_resource.name}'" do
     node.run_state['fragments'] = {
@@ -19,7 +22,8 @@ action :create do
         'name' => new_resource.name,
         'packer' => new_resource.packer,
         'driver' => new_resource.driver,
-        'supermarket_url' => new_resource.supermarket_url
+        'supermarket_url' => new_resource.supermarket_url,
+        'domain_name' => new_resource.domain_name
       }
     }
   end
