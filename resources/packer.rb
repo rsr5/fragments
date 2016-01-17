@@ -1,9 +1,9 @@
-resource_name :datasift_machine_packer
+resource_name :packer
 
 action :pack do
   converge_by(
-    "Packed #{::Chef.node.run_state['machine-fragments'].size} "\
-    "fragments with '#{MachinePacker.get.class.name}'") do
+    "Packed #{::Chef.node.run_state['fragments']['cluster']['fragments'].size}"\
+    " fragments with '#{MachinePacker.get.class.name}'") do
     MachinePacker.get.pack
   end
 end

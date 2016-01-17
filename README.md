@@ -34,6 +34,10 @@ fragment 'nginx' do
   run_list %w(nginx::default)
   required_fragment %w(webapp)
 end
+
+packer 'default' do
+  action [:pack, :verify]
+end
 ```
 
 So rather than define a virtual machine with a run list that contains the

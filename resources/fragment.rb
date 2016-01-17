@@ -70,6 +70,9 @@ def machine_file(local_path, remote_path)
 end
 
 action :create do
+  fail 'Define a fragment_cluster resource before defining fragments' \
+    unless node.run_state['fragments']['cluster']['name']
+
   converge_by "Merged fragment '#{new_resource.name}'" do
     node.run_state['fragments']['cluster']['fragments'] = [] \
       unless node.run_state['fragments']['cluster']['fragments']
