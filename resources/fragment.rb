@@ -68,6 +68,8 @@ end
 
 action :create do
   converge_by "Merged fragment '#{new_resource.name}'" do
-    node.run_state['machine-fragments'] << new_resource
+    node.run_state['fragments']['cluster']['fragments'] = [] \
+      unless node.run_state['fragments']['cluster']['fragments']
+    node.run_state['fragments']['cluster']['fragments'] << new_resource
   end
 end
