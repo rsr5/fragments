@@ -1,0 +1,7 @@
+name 'fragments'
+maintainer 'Robin Ridler'
+maintainer_email 'robin.ridler@gmail.com'
+license 'all_rights'
+description 'Installs/Configures provision-fragments'
+long_description 'Installs/Configures provision-fragments'
+version '0.1.0'
