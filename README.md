@@ -16,6 +16,8 @@ A *fragment* is defined using an LWRP called `fragment`.  For instance, a
 simple web application may have the following fragments.
 
 ```ruby
+fragment_cluster 'greatwebapp'
+
 fragment 'database' do
   memory_weight 100
   run_list %w(mysqld::default)
