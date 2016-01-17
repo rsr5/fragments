@@ -15,7 +15,7 @@ each other.  From now on these sections will be referred to as *fragments*.
 A *fragment* is defined using an LWRP called `fragment`.  For instance, a
 simple web application may have the following fragments.
 
-```
+```ruby
 fragment 'database' do
   memory_weight 100
   run_list %w(mysqld::default)
