@@ -67,7 +67,7 @@ def machine_file(local_path, remote_path)
 end
 
 action :create do
-  converge_by "Merged fragment #{new_resource.name}" do
+  converge_by "Merged fragment '#{new_resource.name}'" do
     node.run_state['machine-fragments'] << new_resource
   end
 end
