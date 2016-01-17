@@ -2,7 +2,7 @@
 require_relative 'machine'
 require_relative 'fragment'
 
-include DataSift::Packers
+include Fragments::Packers
 
 # Represents an action that may be performed on a list of virtual machines in
 # order to sort and filter them.

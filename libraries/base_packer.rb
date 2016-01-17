@@ -3,7 +3,7 @@ require 'pp'
 require_relative 'machine'
 require_relative 'fragment'
 
-module DataSift
+module Fragments
   module Packers
     # Base for packing algorithms
     class MachinePacker
@@ -111,7 +111,9 @@ module DataSift
       # virtual machine.
       def pack
         # Seperate the fragments that should be on every node.
-        fragment_resources = ::Chef.node.run_state['machine-fragments']
+        fragment_resources = ::Chef
+                             .node
+                             .run_state['fragments']['cluster']['fragments']
         fragments = fragment_resources.map { |fr| Fragment.from_resource(fr) }
         groups = { 'every_node' => [],
                    'not_every_node' => []
@@ -152,7 +154,7 @@ module DataSift
       # virtual machines
       def hostnames
         @machines.each_with_index.map do |_, number|
-          "#{::Chef.node['datasift-machine']['machine']['basename']}-#{number}"
+          "#{::Chef.node.run_state['fragments']['cluster']['name']}-#{number}"
         end
       end
     end

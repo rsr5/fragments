@@ -2,7 +2,7 @@
 require_relative 'machine'
 require_relative 'fragment'
 
-include DataSift::Packers
+include Fragments::Packers
 
 # A very simple packer that just uses the memory weight of a fragment
 # to place it.
