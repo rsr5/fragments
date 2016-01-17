@@ -1,4 +1,7 @@
-resource_name :datasift_machine_fragment_v1
+resource_name :fragment
+if node['fragments']['resource_name']
+  resource_name node['fragments']['resource_name'].to_sym
+end
 
 # The name of the fragment, will be used when other fragments depend on this
 # one.
