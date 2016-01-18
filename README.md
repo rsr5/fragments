@@ -36,11 +36,8 @@ fragment 'nginx' do
 end
 
 packer 'default' do
-  action [:pack, :verify]
+  action [:pack, :verify, :berkshelf_vendor]
 end
-
-# Vendor the necessary cookbooks
-berkshelf 'default'
 ```
 
 So rather than define a virtual machine with a run list that contains the
