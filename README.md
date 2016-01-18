@@ -16,7 +16,7 @@ A *fragment* is defined using an LWRP called `fragment`.  For instance, a
 simple web application may have the following fragments.
 
 ```ruby
-fragment_cluster 'greatwebapp'
+cluster 'greatwebapp'
 
 fragment 'database' do
   memory_weight 100
@@ -36,7 +36,10 @@ fragment 'nginx' do
 end
 
 packer 'default' do
-  action [:pack, :verify, :berkshelf_vendor]
+  action [:pack, # Calculate number of virtual machines and pack fragments
+          :berkshelf_vendor, # Retrieve and upload cookbooks to Chef Server
+          :provision # Create the virtual machines
+         ]
 end
 ```
 

@@ -21,14 +21,6 @@ module Fragments
       }
     end
 
-    # Create a file resource for the current state of all the virtual machines
-    def machine_info_resource(state)
-      # Write the info hash to a file
-      file chef_root('machine_info.json') do
-        content lazy { info_hash(state).to_json }
-      end
-    end
-
     # Shortens accessing node attributes forh this cookbook
     def nodeattr
       node['fragments']

@@ -1,17 +1,42 @@
 resource_name :packer
 
 action :pack do
+  chef_data_bag 'fragments'
+
   converge_by(
     "Packed #{::Chef.node.run_state['fragments']['cluster']['fragments'].size}"\
     " fragments with '#{MachinePacker.get.class.name}'") do
     MachinePacker.get.pack
   end
-end
 
-action :verify do
   converge_by("Verified #{MachinePacker.get.fragments.size} fragments") do
     MachinePacker.get.verify_dependencies
   end
+
+  packer = MachinePacker.get
+  packer_spec = packer.machines.map(&:to_hash)
+  converge_by "Storing #{packer.machines.size} machine definitions" do
+    packer_spec = {
+      machines: packer.machines.map(&:to_hash),
+      fragments: packer.fragments.map(&:to_hash)
+    }
+
+    chef_data_bag_item 'spec' do
+      data_bag 'fragments'
+      raw_data packer_spec
+    end
+
+    ::File.open(chef_root('dependencies.dot'), 'w') do |f|
+      f.write(packer.dependency_graph_dot)
+    end
+  end
+
+  machine_state 'Not Created'
+end
+
+action :from_spec_file do
+  MachinePacker.from_spec
+  Driver.get.pre_verify(MachinePacker.get)
 end
 
 action :berkshelf_vendor do
@@ -41,4 +66,51 @@ action :berkshelf_vendor do
     berksfile.install
     berksfile.upload(server_url: ::Chef::Config.chef_server_url)
   end
+end
+
+action :provision do
+  require 'chef/provisioning'
+
+  # Setup all of the virtual machines but do not converge yet in order that
+  # the Chef search index is ready.  Each hostnames is gatherede in the
+  # hostnames variable above and then used to converge the nodes in a second
+  # machine_batch below
+  machine_batch 'setup' do
+    MachinePacker.get.machines.each do |current_machine|
+      machine current_machine.name  do
+        # Add the machine options specific to the driver
+        add_machine_options Driver.get.machine_options(current_machine)
+
+        # Used below to identify the nodes that are being converged
+        tag node['datasift-machine']['machine']['basename']
+
+        # Add the roles
+        current_machine.roles.each do |role|
+          role role
+        end
+
+        # Add the recipes
+        current_machine.recipes.each do |recipe|
+          recipe recipe
+        end
+
+        # Add all of the attributes for each of the fragments
+        current_machine.fragments.each do |fragment|
+          fragment.attributes.each do |k, v|
+            attribute k, v
+          end
+        end
+
+        # Set the fqdn for the machine
+        attribute 'fqdn', [current_machine.name, Driver.get.domain].join('.')
+        attribute 'hostname', current_machine.name
+
+        # Do not converge the virtual machine yet
+        converge false
+      end
+    end
+    action :setup
+  end
+
+  machine_state 'Created'
 end

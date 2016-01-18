@@ -39,16 +39,15 @@ module Fragments
 
       # Creates a Packer object that has previously been packed from a JSON
       # spec file
-      def self.from_spec_file(path) # rubocop:disable Metrics/MethodLength
+      def self.from_spec
         packer = MachinePacker.new
-        ::File.open(path, 'r') do |spec_file|
-          packer_spec = JSON.parse(spec_file.read)
-          packer.machines = packer_spec['machines'].map do |m|
-            Machine.from_hash(m)
-          end
-          packer.fragments = packer_spec['fragments'].map do |f|
-            Fragment.from_hash(f)
-          end
+        packer_spec = ::Chef::DataBagItem.load('fragments', 'spec')
+
+        packer.machines = packer_spec['machines'].map do |m|
+          Machine.from_hash(m)
+        end
+        packer.fragments = packer_spec['fragments'].map do |f|
+          Fragment.from_hash(f)
         end
         @packer = packer if @packer.nil?
       end
