@@ -1,4 +1,4 @@
-resource_name :fragment_cluster
+resource_name :cluster
 
 # A base name that will be used when generating the names for virtual machines
 property :name, String, required: true
