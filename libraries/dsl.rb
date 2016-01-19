@@ -40,6 +40,12 @@ module Fragments
       node.run_state['fragments']['cluster']['packer']
     end
 
+    # Returns the path to the root of the Chef zero server if one is being
+    # used
+    def chef_root(path = '')
+      ::File.join(::Chef.node['fragments']['chef-zero-root'], path)
+    end
+
     # Reserved for later use.  Returns the environment that should be used
     # for the nodes.
     def chef_environment
