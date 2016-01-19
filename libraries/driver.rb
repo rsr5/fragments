@@ -35,41 +35,18 @@ module Fragments
         configure
       end
 
-      def configure
-        fail 'Do not use the Driver class directly, it is intended that it '\
-             'should inherited from.'
-      end
-
       def machine_options(machine)
         extra_machine_options(machine).merge(
           convergence_options: {
             chef_version: '12.4.1',
-            chef_config: "log_location '/var/log/chef_client.log'\n"
+            chef_config: "log_location '/var/log/chef/client.log'\n"
           }
         )
       end
 
-      # If the driver needs to verify anything before creating virtual machines
-      # then override this method.  For instance, checking for hostname
-      # collisions.
-      def pre_verify(_packer)
-      end
-
       # Returns the domain name that should be used for FQDNs
       def domain
-        ::Chef.node.run_state['fragments']['cluster']['domain']
-      end
-
-      # Returns the ip address associated with a virtual machine
-      def ipaddr(machine)
-        "192.168.1.1#{machine.suffix}"
-      end
-
-      # Returns the options that should be run in order to ssh to a virtual
-      # machine
-      def ssh_options(_machine)
-        fail 'Do not use the Driver class directly, it is intended that it '\
-             'should be inherited from.'
+        ::Chef.node.run_state['fragments']['cluster']['domain_name']
       end
 
       # Returns the command used to SSH to a virtual machine
@@ -91,6 +68,37 @@ module Fragments
           ssh_command: ssh_command(machine),
           host_aliases: machine.host_aliases
         }
+      end
+
+      # Override the below methods when writing a driver class
+
+      # Extra options that should be used when creating virtual machines
+      def extra_machine_options(_machine)
+        {}
+      end
+
+      def configure
+        fail 'Do not use the Driver class directly, it is intended that it '\
+             'should inherited from.'
+      end
+
+      # Returns the ip address associated with a virtual machine
+      def ipaddr(_machine)
+        fail 'Do not use the Driver class directly, it is intended that it '\
+             'should be inherited from.'
+      end
+
+      # Returns the options that should be run in order to ssh to a virtual
+      # machine
+      def ssh_options(_machine)
+        fail 'Do not use the Driver class directly, it is intended that it '\
+             'should be inherited from.'
+      end
+
+      # If the driver needs to verify anything before creating virtual machines
+      # then override this method.  For instance, checking for hostname
+      # collisions.
+      def pre_verify(_packer)
       end
     end
   end
