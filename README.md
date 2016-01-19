@@ -39,6 +39,7 @@ packer 'default' do
   action [:pack, # Calculate number of virtual machines and pack fragments
           :berkshelf_vendor, # Retrieve and upload cookbooks to Chef Server
           :provision # Create the virtual machines
+          :converge # Converge the virtual machines
          ]
 end
 ```
