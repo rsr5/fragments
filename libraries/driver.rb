@@ -39,7 +39,7 @@ module Fragments
         extra_machine_options(machine).merge(
           convergence_options: {
             chef_version: '12.4.1',
-            chef_config: "log_location '/var/log/chef/client.log'\n"
+            chef_config: "log_location '/var/log/chef_client.log'\n"
           }
         )
       end
