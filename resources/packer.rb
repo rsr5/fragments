@@ -1,5 +1,8 @@
 resource_name :packer
 
+# May be used with the deploy action to converge a set of virtual machines
+property :machines, Array, default: []
+
 action :pack do
   chef_data_bag 'fragments'
 
@@ -35,8 +38,10 @@ action :pack do
 end
 
 action :from_spec_file do
-  MachinePacker.from_spec
-  Driver.get.pre_verify(MachinePacker.get)
+  converge_by 'Loaded spec from data bag' do
+    MachinePacker.from_spec
+    Driver.get.pre_verify(MachinePacker.get)
+  end
 end
 
 action :berkshelf_vendor do
@@ -113,4 +118,20 @@ action :provision do
   end
 
   machine_state 'Created'
+end
+
+action :converge do
+  machines = MachinePacker.get.machines
+  if new_resource.machines.size > 0
+    machines = machines.select do |current_machine|
+      new_resource.machines.include?(current_machine.name)
+    end
+  end
+
+  machine_batch 'converge' do
+    machines machines.map(&:name)
+    action :converge_only
+  end
+
+  machine_state 'Converged'
 end

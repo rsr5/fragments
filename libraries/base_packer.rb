@@ -41,7 +41,7 @@ module Fragments
       # spec file
       def self.from_spec
         packer = MachinePacker.new
-        packer_spec = ::Chef::DataBagItem.load('fragments', 'spec')
+        packer_spec = ::Chef::DataBagItem.load('fragments', 'spec').to_hash
 
         packer.machines = packer_spec['machines'].map do |m|
           Machine.from_hash(m)
