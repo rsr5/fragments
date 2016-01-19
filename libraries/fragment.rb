@@ -3,8 +3,8 @@
 class Fragment
   attr_accessor :name, :run_list, :attributes, :memory_weight,
                 :required_fragments, :every_node, :cardinality, :berkshelf,
-                :host_aliases, :machine_files, :tags, :avoid_tags,
-                :group_with_tags, :flavor_id
+                :host_aliases, :machine_files, :machine_commands, :tags,
+                :avoid_tags, :group_with_tags, :flavor_id
 
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def self.from_resource(fragment_resource)
@@ -19,6 +19,7 @@ class Fragment
     fragment.berkshelf = fragment_resource.berkshelf
     fragment.host_aliases = fragment_resource.host_aliases
     fragment.machine_files = fragment_resource.machine_files
+    fragment.machine_commands = fragment_resource.machine_commands
     fragment.tags = fragment_resource.tags
     fragment.avoid_tags = fragment_resource.avoid_tags
     fragment.group_with_tags = fragment_resource.group_with_tags
@@ -38,6 +39,7 @@ class Fragment
     fragment.berkshelf = hash['berkshelf']
     fragment.host_aliases = hash['host_aliases']
     fragment.machine_files = hash['machine_files']
+    fragment.machine_commands = hash['machine_commands']
     fragment.tags = hash['tags']
     fragment.avoid_tags = hash['avoid_tags']
     fragment.group_with_tags = hash['group_with_tags']
@@ -57,6 +59,7 @@ class Fragment
       berkshelf: @berkshelf,
       host_aliases: @host_aliases,
       machine_files: @machine_files,
+      machine_commands: @machine_commands,
       tags: @tags,
       avoid_tags: @avoid_tags,
       group_with_tags: @group_with_tags,

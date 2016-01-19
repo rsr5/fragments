@@ -117,6 +117,18 @@ action :provision do
     action :setup
   end
 
+  # Transfer all of the relevant files to the virtual machine
+  machines.each do |current_machine|
+    current_machine.fragments.each do |fragment|
+      fragment.machine_files.each do |local_path, remote_path|
+        machine_file remote_path do
+          machine current_machine.name
+          local_path local_path
+        end
+      end
+    end
+  end
+
   machine_state 'Created'
 end
 
@@ -131,6 +143,18 @@ action :converge do
   machine_batch 'converge' do
     machines machines.map(&:name)
     action :converge_only
+  end
+
+  # Execute all of the post converge commands
+  machines.each do |current_machine|
+    current_machine.fragments.each do |fragment|
+      fragment.machine_commands.each do |description, command|
+        machine_execute description do
+          machine current_machine.name
+          command command
+        end
+      end
+    end
   end
 
   machine_state 'Converged'

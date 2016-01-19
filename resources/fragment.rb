@@ -57,16 +57,23 @@ property :group_with_tags, Array, default: []
 # define the amount of resources that a virtual machine should have assigned.
 property :flavor_id, String, default: '2'
 
-attr_reader :machine_files
+attr_reader :machine_files, :machine_commands
 
 def initialize(*args)
   super
   @machine_files = {}
+  @machine_commands = {}
 end
 
 # Transfer a file to a virtual machine.
 def machine_file(local_path, remote_path)
   @machine_files[local_path] = remote_path
+end
+
+# Add a command that should be run on the virtual machine when the converge
+# stage is finished.
+def machine_command(description, command)
+  @machine_commands[description] = command
 end
 
 action :create do
