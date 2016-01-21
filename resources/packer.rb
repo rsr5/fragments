@@ -118,7 +118,7 @@ action :provision do
   end
 
   # Transfer all of the relevant files to the virtual machine
-  machines.each do |current_machine|
+  MachinePacker.get.machines.each do |current_machine|
     current_machine.fragments.each do |fragment|
       fragment.machine_files.each do |local_path, remote_path|
         machine_file remote_path do
