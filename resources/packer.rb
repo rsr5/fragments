@@ -159,3 +159,21 @@ action :converge do
 
   machine_state 'Converged'
 end
+
+action :destroy do
+  ::Chef::Recipe.send(:extend, Fragments::Drivers)
+
+  # Initialize the driver
+  Driver.get
+
+  # Nodes to destroy
+  nodes = search(:node,
+                 "tags:#{node['datasift-machine']['machine']['basename']}")
+
+  # Destroy all of the virtual machines that are tagged with the basename
+  # for this configuration
+  machine_batch do
+    machines nodes.map(&:name)
+    action :destroy
+  end
+end
