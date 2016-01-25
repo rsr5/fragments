@@ -1,8 +1,6 @@
 
 require 'chef/mixin/template'
 
-require 'awesome_print'
-
 include Chef::Mixin::Template
 include Fragments::DSL
 
@@ -54,6 +52,8 @@ module DebugModularPackerMixin
   # has found a suitable machine to place the fragment in.
   def placed_fragment(machine)
     return unless ::Chef.node['fragments']['enable-packer-debugging']
+    install_awesome_print
+    require 'awesome_print'
     @fragment += render_template(
       'placed_fragment.html.erb',
       message: 'Placed in',
@@ -73,6 +73,12 @@ module DebugModularPackerMixin
   end
 
   private
+
+  def install_awesome_print
+    chef_gem = Chef::Resource::ChefGem.new('awesome_print',
+                                           ::Chef.node.run_context)
+    chef_gem.run_action(:install)
+  end
 
   def end_fragment
     @report += render_template('end_fragment.html.erb', fragment: @fragment)
