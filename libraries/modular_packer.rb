@@ -66,7 +66,14 @@ class AvoidTags < Filter
 
   def self.filter(fragment, machines)
     machines.select do |machine|
-      machine.tags.disjoint?(fragment.avoid_tags.to_set)
+      avoid_machine_tags = machine.tags.disjoint?(fragment.avoid_tags.to_set)
+      avoid_fragment_tags = machine
+                            .fragments
+                            .map(&:avoid_tags)
+                            .flatten
+                            .to_set
+                            .disjoint?(fragment.tags.to_set)
+      avoid_machine_tags && avoid_fragment_tags
     end
   end
 end
@@ -137,7 +144,7 @@ class ModularPacker < MachinePacker
   # final number of nodes
   def pack_not_every_node(fragments)
     # Place fragments that have tags before those that do not
-    fragments.sort_by(&:tags).reverse_each do |fragment|
+    fragments.each do |fragment|
       fragment.cardinality.times do |count|
         beginning_to_pack_fragment(fragment, count)
         place_fragment(fragment)
