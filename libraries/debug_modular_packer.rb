@@ -8,6 +8,8 @@ include Fragments::DSL
 module DebugModularPackerMixin
   # Debugging probe that is called when the packing process begins
   def packing_started
+    return unless ::Chef.node['fragments']['enable-packer-debugging']
+    install_awesome_print
     @report = ''
     @fragment = ''
   end
@@ -65,7 +67,6 @@ module DebugModularPackerMixin
   def beginning_to_pack_fragment(fragment, _index)
     return unless ::Chef.node['fragments']['enable-packer-debugging']
     require 'awesome_print'
-    install_awesome_print
     @fragment += render_template(
       'fragment.html.erb',
       fragment: fragment
