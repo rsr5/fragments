@@ -52,8 +52,6 @@ module DebugModularPackerMixin
   # has found a suitable machine to place the fragment in.
   def placed_fragment(machine)
     return unless ::Chef.node['fragments']['enable-packer-debugging']
-    install_awesome_print
-    require 'awesome_print'
     @fragment += render_template(
       'placed_fragment.html.erb',
       message: 'Placed in',
@@ -66,6 +64,8 @@ module DebugModularPackerMixin
   # a fragment is going to be packed
   def beginning_to_pack_fragment(fragment, _index)
     return unless ::Chef.node['fragments']['enable-packer-debugging']
+    require 'awesome_print'
+    install_awesome_print
     @fragment += render_template(
       'fragment.html.erb',
       fragment: fragment
