@@ -36,7 +36,7 @@ class MemoryUsed < Filter
   end
 
   def self.filter(_memory, machines)
-    machines.sort_by { |m| -m.memory_used }
+    machines.sort_by(&:memory_used)
   end
 end
 
