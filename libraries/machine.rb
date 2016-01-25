@@ -74,6 +74,11 @@ class Machine
     [::Chef.node.run_state['fragments']['cluster']['name'], @suffix].join('-')
   end
 
+  # Percentage memory used
+  def memory_used_percent
+    (memory_used.to_f / memory * 100).to_i
+  end
+
   # Appends the fragment to the end of the run list
   def append_fragment(fragment)
     @fragments << fragment

@@ -109,6 +109,8 @@ module Fragments
       # intended for every node are prepended to the run lists of each
       # virtual machine.
       def pack
+        packing_started
+
         # Seperate the fragments that should be on every node.
         fragment_resources = ::Chef
                              .node
@@ -123,6 +125,40 @@ module Fragments
         # Pack the fragments in the appropriate way
         pack_not_every_node(groups['not_every_node'])
         pack_every_node(groups['every_node'])
+
+        packing_finished
+      end
+
+      # Debugging probe that is called when the packing process begins
+      def packing_started
+      end
+
+      # Debugging probe that is called when the packing provess is finished
+      def packing_finished
+      end
+
+      # Debugging probe that may be used by packers.  Called when a filter
+      # has been applied to a list of virtual machines.  It is required that
+      # the list of machines returned by the filter is also returned here.
+      def applied_filter(_fragment, _filter, machines)
+        machines
+      end
+
+      # Debugging probe that may be used by packers.  Called when a packer
+      # calculates that a new virtual machine is required.  It is required that
+      # the machine object is returned here.
+      def created_machine(machine)
+        machine
+      end
+
+      # Debugging probe that may be used by packers.  Called just before
+      # a fragment is going to be packed
+      def beginning_to_pack_fragment(_fragment)
+      end
+
+      # Debugging probe that may be used by packers.  Called once a packer
+      # has found a suitable machine to place the fragment in.
+      def placed_fragment(_machine, _index)
       end
 
       # Represents the dependency graph as DOT notation used by Graphviz

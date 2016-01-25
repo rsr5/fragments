@@ -1,4 +1,3 @@
-
 require_relative 'machine'
 require_relative 'fragment'
 
@@ -126,24 +125,12 @@ Filter.register(AvoidSameFragment)
 
 # A packer that is configurable by way of sorters and filters
 class ModularPacker < MachinePacker
+  include DebugModularPackerMixin
+
   def initialize
     # Used to number the virtual machines as they are created
     @counter = 0
     super
-  end
-
-  def _place_fragment(fragment)
-    local_machines = machines
-    Filter.filters.each do |filter|
-      local_machines = filter.filter(fragment, local_machines)
-    end
-
-    if local_machines.size == 0
-      @machines << Machine.from_fragment(@counter, fragment)
-      @counter += 1
-    else
-      local_machines[0].append_fragment(fragment)
-    end
   end
 
   # Packs all of the fragments that have a cardinality less than the
@@ -151,10 +138,41 @@ class ModularPacker < MachinePacker
   def pack_not_every_node(fragments)
     # Place fragments that have tags before those that do not
     fragments.sort_by(&:tags).reverse_each do |fragment|
-      fragment.cardinality.times do |_|
-        _place_fragment(fragment)
+      fragment.cardinality.times do |count|
+        beginning_to_pack_fragment(fragment, count)
+        place_fragment(fragment)
         add_fragments([fragment])
       end
+    end
+  end
+
+  private
+
+  # Find a list of virtual machines (if any) that would be suitable for the
+  # fragment
+  def filter_machines(fragment)
+    local_machines = machines
+    Filter.filters.each do |filter|
+      next if local_machines.length == 0
+      local_machines = applied_filter(
+        fragment, filter, filter.filter(fragment, local_machines)
+      )
+    end
+    local_machines
+  end
+
+  # Either create a new virtual machine or place the fragment in an existing
+  # one
+  def place_fragment(fragment)
+    local_machines = filter_machines(fragment)
+
+    if local_machines.size == 0
+      @machines << created_machine(Machine.from_fragment(@counter, fragment))
+      @counter += 1
+    else
+      machine = local_machines[0]
+      machine.append_fragment(fragment)
+      placed_fragment(machine)
     end
   end
 end

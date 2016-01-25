@@ -1,0 +1,28 @@
+
+<h2>Packing Fragment <strong><%= @fragment.name %></strong></h2>
+
+<div class="panel panel-default">
+  <div class="panel-body">
+<pre>
+fragment '<%= @fragment.name %>' do
+  cardinality <%= @fragment.cardinality %>
+  memory_weight <%= @fragment.memory_weight %>
+  flavor_id <%= @fragment.flavor_id %><% if @fragment.host_aliases.length> 0 %>
+  host_aliases %w(<% @fragment.host_aliases.each do |item| %><%= item %><% if item == @fragment.host_aliases.last %>)<% else %>
+                  <% end %><% end %><% end %><% if @fragment.run_list.length > 0 %>
+  run_list %w(<% @fragment.run_list.each do |item| %><%= item %><% if item == @fragment.run_list.last %>)<% else %>
+              <% end %><% end %><% end %><% if @fragment.tags.length > 0 %>
+  tags %w(<% @fragment.tags.each do |item| %><%= item %><% if item == @fragment.tags.last %>)<% else %>
+          <% end %><% end %><% end %><% if @fragment.group_with_tags.length > 0 %>
+  group_with_tags %w(<% @fragment.group_with_tags.each do |item| %><%= item %><% if item == @fragment.group_with_tags.last %>)<% else %>
+                     <% end %><% end %><% end %><% if @fragment.avoid_tags.length > 0 %>
+  avoid_tags %w(<% @fragment.avoid_tags.each do |item| %><%= item %><% if item == @fragment.avoid_tags.last %>)<% else %>
+                <% end %><% end %><% end %><% if @fragment.attributes.size > 0 %>
+  attributes <%= ap @fragment.attributes, :indent => 2, :index => false %><% else %><% end %><% if @fragment.machine_files.size > 0 %>
+  machine_files <%= ap @fragment.machine_files, :indent => 2, :index => false %><% else %><% end %><% if @fragment.machine_commands.size > 0 %>
+  machine_commands <%= ap @fragment.machine_commands, :indent => 2, :index => false %><% else %><% end %><% if @fragment.berkshelf.size > 0 %>
+  berkshelf <%= ap @fragment.berkshelf, :indent => 2, :index => false %><% else %><% end %>
+end
+</pre>
+  </div>
+</div>
