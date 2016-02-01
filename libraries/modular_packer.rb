@@ -80,6 +80,23 @@ end
 
 Filter.register(AvoidTags)
 
+# Filter out machines that have tags other than those in only_group_with_tags
+class OnlyGroupWithTags < Filter
+  def self.precedence
+    10
+  end
+
+  def self.filter(fragment, machines)
+    machines.select do |machine|
+      empty = machine.only_group_with_tags.empty? && fragment.only_group_with_tags.empty?
+      equal = machine.only_group_with_tags == fragment.only_group_with_tags.to_set
+      empty || equal
+    end
+  end
+end
+
+Filter.register(OnlyGroupWithTags)
+
 # Sort the list of virtual machines with the machines that are tagged with
 # requested tags first.  If there are no machines with the tags required then
 # a machine without the tags may be chosen.

@@ -12,6 +12,7 @@ module Fragments
          {
            state: state,
            environment: current_machine.environment,
+           memory_used_percent: current_machine.memory_used_percent,
            flavor: current_machine.flavor
          }.merge(
            Fragments::Drivers::Driver.get.machine_info(current_machine)

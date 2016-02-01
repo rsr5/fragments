@@ -5,7 +5,7 @@ require 'set'
 class Machine
   # Represents one virtual machine that will eventually be converged.
   attr_accessor :fragments, :memory, :memory_used, :run_list, :suffix, :tags,
-                :flavor_id, :environment
+                :only_group_with_tags, :flavor_id, :environment
 
   def self.flavors
     {
@@ -20,13 +20,14 @@ class Machine
   # Create a new Machine object from a machine fragment resource. Suffix is
   # string that should be append to the basename to make this machines name
   # unique
-  def self.from_fragment(suffix, fragment)
+  def self.from_fragment(suffix, fragment) # rubocop:disable Metrics/AbcSize
     machine = Machine.new
     machine.fragments = [fragment]
     machine.memory_used = fragment.memory_weight
     machine.run_list = fragment.run_list
     machine.suffix = suffix
     machine.tags = fragment.tags.to_set
+    machine.only_group_with_tags = fragment.only_group_with_tags.to_set
     machine.flavor_id = fragment.flavor_id
     machine.environment = fragment.environment
     machine
@@ -45,6 +46,7 @@ class Machine
     machine.run_list = hash['run_list']
     machine.suffix = hash['suffix']
     machine.tags = hash['tags'].to_set
+    machine.only_group_with_tags = hash['only_group_with_tags'].to_set
     machine.flavor_id = hash['flavor_id']
     machine.environment = hash['environment']
     machine

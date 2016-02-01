@@ -4,7 +4,8 @@ class Fragment
   attr_accessor :name, :run_list, :attributes, :memory_weight,
                 :required_fragments, :every_node, :cardinality, :berkshelf,
                 :host_aliases, :machine_files, :machine_commands, :tags,
-                :avoid_tags, :group_with_tags, :flavor_id, :environment
+                :avoid_tags, :group_with_tags, :only_group_with_tags,
+                :flavor_id, :environment
 
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def self.from_resource(fragment_resource)
@@ -23,6 +24,7 @@ class Fragment
     fragment.tags = fragment_resource.tags
     fragment.avoid_tags = fragment_resource.avoid_tags
     fragment.group_with_tags = fragment_resource.group_with_tags
+    fragment.only_group_with_tags = fragment_resource.only_group_with_tags
     fragment.flavor_id = fragment_resource.flavor_id
     fragment.environment = fragment_resource.environment
     fragment
@@ -44,6 +46,7 @@ class Fragment
     fragment.tags = hash['tags']
     fragment.avoid_tags = hash['avoid_tags']
     fragment.group_with_tags = hash['group_with_tags']
+    fragment.only_group_with_tags = hash['only_group_with_tags']
     fragment.flavor_id = hash['flavor_id']
     fragment.environment = hash['environment']
     fragment
@@ -65,6 +68,7 @@ class Fragment
       tags: @tags,
       avoid_tags: @avoid_tags,
       group_with_tags: @group_with_tags,
+      only_group_with_tags: @only_group_with_tags,
       flavor_id: @flavor_id,
       environment: @environment
     }
