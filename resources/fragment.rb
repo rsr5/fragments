@@ -61,6 +61,9 @@ property :only_group_with_tags, Array, default: []
 # define the amount of resources that a virtual machine should have assigned.
 property :flavor_id, String, default: '2'
 
+# The environment that the virtual machine should have assigned
+property :environment, String, default: 'datasift'
+
 attr_reader :machine_files, :machine_commands
 
 def initialize(*args)

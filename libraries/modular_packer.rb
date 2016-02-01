@@ -130,6 +130,22 @@ end
 
 Filter.register(AvoidSameFragment)
 
+# Filters the list of virtual machine to those that have the correct
+# environment for the fragment
+class ChooseEnvironment < Filter
+  def self.precedence
+    10
+  end
+
+  def self.filter(fragment, machines)
+    machines.select do |machine|
+      machine.environment == fragment.environment
+    end
+  end
+end
+
+Filter.register(ChooseEnvironment)
+
 # A packer that is configurable by way of sorters and filters
 class ModularPacker < MachinePacker
   include DebugModularPackerMixin
