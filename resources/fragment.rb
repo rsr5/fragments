@@ -53,6 +53,10 @@ property :avoid_tags, Array, default: []
 # side.
 property :group_with_tags, Array, default: []
 
+# A list of tags that the packer should use to only group like tagged fragments
+# together with no other fragments allowed on the host.
+property :only_group_with_tags, Array, default: []
+
 # The flavor that should be used to create the virtual machine.  Flavors
 # define the amount of resources that a virtual machine should have assigned.
 property :flavor_id, String, default: '2'
