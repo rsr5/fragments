@@ -62,7 +62,9 @@ property :only_group_with_tags, Array, default: []
 property :flavor_id, String, default: '2'
 
 # The environment that the virtual machine should have assigned
-property :environment, String, default: 'datasift'
+property :environment,
+         String,
+         default: lazy { node['fragments']['default_environment'] }
 
 attr_reader :machine_files, :machine_commands
 
