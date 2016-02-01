@@ -86,6 +86,9 @@ action :provision do
         # Add the machine options specific to the driver
         add_machine_options Driver.get.machine_options(current_machine)
 
+        # The Chef environment of the machine
+        chef_environment current_machine.environment
+
         # Used below to identify the nodes that are being converged
         tag node['datasift-machine']['machine']['basename']
 

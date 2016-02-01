@@ -9,7 +9,11 @@ module Fragments
                       .machines
                       .map do |current_machine|
         [current_machine.name,
-         { state: state }.merge(
+         {
+           state: state,
+           environment: current_machine.environment,
+           flavor: current_machine.flavor
+         }.merge(
            Fragments::Drivers::Driver.get.machine_info(current_machine)
          )]
       end]
