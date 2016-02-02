@@ -136,6 +136,7 @@ class Machine
       memory_used: @memory_used,
       suffix: @suffix,
       tags: @tags.to_a,
+      only_group_with_tags: @only_group_with_tags.to_a,
       flavor_id: @flavor_id,
       run_list: @run_list,
       environment: @environment,
