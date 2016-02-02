@@ -46,9 +46,12 @@ class Machine
     machine.run_list = hash['run_list']
     machine.suffix = hash['suffix']
     machine.tags = hash['tags'].to_set
-    machine.only_group_with_tags = hash['only_group_with_tags'].to_set
     machine.flavor_id = hash['flavor_id']
     machine.environment = hash['environment']
+    machine.only_group_with_tags = []
+    if hash.key?('only_group_with_tags') && hash['only_group_with_tags']
+      machine.only_group_with_tags = hash['only_group_with_tags'].to_set
+    end
     machine
   end
 
