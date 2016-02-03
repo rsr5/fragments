@@ -70,6 +70,8 @@ action :berkshelf_vendor do
 
     berksfile.install
     berksfile.upload(server_url: ::Chef::Config.chef_server_url)
+
+    ::File.delete(chef_root('../Berksfile-Remote-Machines.lock'))
   end
 end
 
