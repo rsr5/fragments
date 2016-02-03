@@ -120,7 +120,8 @@ action :provision do
     action :setup
   end
 
-  # Transfer all of the relevant files to the virtual machine
+  # Transfer all of the relevant files to the virtual machine and create the
+  # directory for the Chef log.
   MachinePacker.get.machines.each do |current_machine|
     current_machine.fragments.each do |fragment|
       fragment.machine_files.each do |local_path, remote_path|
@@ -129,6 +130,10 @@ action :provision do
           local_path local_path
         end
       end
+    end
+    machine_execute "#{current_machine.name} create Chef log directory" do
+      machine current_machine.name
+      command 'sudo mkdir -p /var/log/chef/'
     end
   end
 
