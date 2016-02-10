@@ -1,16 +1,18 @@
 # Represents one machine fragment and provides functionality to serialise
 # and de-serialise
 class Fragment
-  attr_accessor :name, :run_list, :attributes, :memory_weight,
-                :required_fragments, :every_node, :cardinality, :berkshelf,
-                :host_aliases, :machine_files, :machine_commands, :tags,
-                :avoid_tags, :group_with_tags, :only_group_with_tags,
+  attr_accessor :name, :cookbook_name, :recipe_name, :run_list, :attributes,
+                :memory_weight, :required_fragments, :every_node, :cardinality,
+                :berkshelf, :host_aliases, :machine_files, :machine_commands,
+                :tags, :avoid_tags, :group_with_tags, :only_group_with_tags,
                 :flavor_id, :environment
 
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def self.from_resource(fragment_resource)
     fragment = Fragment.new
     fragment.name = fragment_resource.name
+    fragment.cookbook_name = fragment_resource.cookbook_name
+    fragment.recipe_name = fragment_resource.recipe_name
     fragment.run_list = fragment_resource.run_list
     fragment.attributes = fragment_resource.attributes
     fragment.memory_weight = fragment_resource.memory_weight
@@ -33,6 +35,8 @@ class Fragment
   def self.from_hash(hash)
     fragment = Fragment.new
     fragment.name = hash['name']
+    fragment.cookbook_name = hash['cookbook_name']
+    fragment.recipe_name = hash['recipe_name']
     fragment.run_list = hash['run_list']
     fragment.attributes = hash['attributes']
     fragment.memory_weight = hash['memory_weight']
@@ -55,6 +59,8 @@ class Fragment
   def to_hash
     {
       name: @name,
+      cookbook_name: @cookbook_name,
+      recipe_name: @recipe_name,
       run_list: @run_list,
       attributes: @attributes,
       memory_weight: @memory_weight,

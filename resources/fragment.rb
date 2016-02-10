@@ -85,6 +85,12 @@ def machine_command(description, command)
   @machine_commands[description] = command
 end
 
+# Tests if a fragment of that name is already in the collection
+def existing_fragment(fragment)
+  node.run_state['fragments']['cluster']['fragments']
+    .find { |f| f.name == fragment.name }
+end
+
 action :create do
   fail 'Define a fragment_cluster resource before defining fragments' \
     unless node.run_state['fragments']['cluster']['name']
@@ -92,6 +98,10 @@ action :create do
   converge_by "Merged fragment '#{new_resource.name}'" do
     node.run_state['fragments']['cluster']['fragments'] = [] \
       unless node.run_state['fragments']['cluster']['fragments']
+
+    fail "Fragment with name '#{new_resource.name}' already included at #{existing_fragment(new_resource).source_line}" \
+      if existing_fragment(new_resource)
+
     node.run_state['fragments']['cluster']['fragments'] << new_resource
   end
 end
