@@ -14,7 +14,7 @@ class Machine
       '3' => ['m1.medium', 4096, 2],
       '4' => ['m1.large', 8192, 4],
       '5' => ['m1.xlarge', 16_384, 8]
-    }
+    }.merge(::Chef.node['fragments']['extra_flavors'])
   end
 
   # Create a new Machine object from a machine fragment resource. Suffix is

@@ -9,3 +9,6 @@ default['fragments']['enable-packer-debugging'] = false
 
 # The default environment
 default['fragments']['default_environment'] = '_default'
+
+# A hash of extra user defined flavors.
+default['fragments']['extra_flavors'] = {}
