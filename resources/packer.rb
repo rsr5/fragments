@@ -122,6 +122,20 @@ action :provision do
     action :setup
   end
 
+  ruby_block 'set extra driver attributes on the node object' do
+    block do
+      MachinePacker.get.machines.each do |current_machine|
+        attrs = Driver.get.extra_attributes(current_machine)
+        next unless attrs.size > 0
+        node = search(:node, "name:#{current_machine.name}")[0]
+        attrs.each do |key, value|
+          node.normal[key] = value
+        end
+        node.save
+      end
+    end
+  end
+
   # Transfer all of the relevant files to the virtual machine and create the
   # directory for the Chef log.
   MachinePacker.get.machines.each do |current_machine|

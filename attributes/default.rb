@@ -12,3 +12,6 @@ default['fragments']['default_environment'] = '_default'
 
 # A hash of extra user defined flavors.
 default['fragments']['extra_flavors'] = {}
+
+# A hash of extra machine options that should always be applied
+default['fragments']['machine_options'] = {}

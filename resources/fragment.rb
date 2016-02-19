@@ -66,12 +66,13 @@ property :environment,
          String,
          default: lazy { node['fragments']['default_environment'] }
 
-attr_reader :machine_files, :machine_commands
+attr_reader :machine_files, :machine_commands, :machine_options
 
 def initialize(*args)
   super
   @machine_files = {}
   @machine_commands = {}
+  @machine_options = {}
 end
 
 # Transfer a file to a virtual machine.
@@ -83,6 +84,12 @@ end
 # stage is finished.
 def machine_command(description, command)
   @machine_commands[description] = command
+end
+
+# Add extra machine options that will be merged into the options for the
+# machine the fragment is placed on
+def machine_option(options)
+  @machine_options = @machine_options.merge(options)
 end
 
 # Tests if a fragment of that name is already in the collection

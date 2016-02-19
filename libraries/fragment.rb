@@ -4,8 +4,8 @@ class Fragment
   attr_accessor :name, :cookbook_name, :recipe_name, :run_list, :attributes,
                 :memory_weight, :required_fragments, :every_node, :cardinality,
                 :berkshelf, :host_aliases, :machine_files, :machine_commands,
-                :tags, :avoid_tags, :group_with_tags, :only_group_with_tags,
-                :flavor_id, :environment
+                :machine_options, :tags, :avoid_tags, :group_with_tags,
+                :only_group_with_tags, :flavor_id, :environment
 
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def self.from_resource(fragment_resource)
@@ -23,6 +23,7 @@ class Fragment
     fragment.host_aliases = fragment_resource.host_aliases
     fragment.machine_files = fragment_resource.machine_files
     fragment.machine_commands = fragment_resource.machine_commands
+    fragment.machine_options = fragment_resource.machine_options
     fragment.tags = fragment_resource.tags
     fragment.avoid_tags = fragment_resource.avoid_tags
     fragment.group_with_tags = fragment_resource.group_with_tags
@@ -30,6 +31,18 @@ class Fragment
     fragment.flavor_id = fragment_resource.flavor_id
     fragment.environment = fragment_resource.environment
     fragment
+  end
+
+  def self.symbolize(hash)
+    new_hash = {}
+    hash.each do |k, v|
+      if v.is_a?(Hash)
+        new_hash[k.to_sym] = symbolize(v)
+      else
+        new_hash[k.to_sym] = v
+      end
+    end
+    new_hash
   end
 
   def self.from_hash(hash)
@@ -47,6 +60,7 @@ class Fragment
     fragment.host_aliases = hash['host_aliases']
     fragment.machine_files = hash['machine_files']
     fragment.machine_commands = hash['machine_commands']
+    fragment.machine_options = symbolize(hash['machine_options'])
     fragment.tags = hash['tags']
     fragment.avoid_tags = hash['avoid_tags']
     fragment.group_with_tags = hash['group_with_tags']
@@ -71,6 +85,7 @@ class Fragment
       host_aliases: @host_aliases,
       machine_files: @machine_files,
       machine_commands: @machine_commands,
+      machine_options: @machine_options,
       tags: @tags,
       avoid_tags: @avoid_tags,
       group_with_tags: @group_with_tags,
