@@ -3,6 +3,8 @@ module Fragments
   module Drivers
     # Contains the driver setup code for Chef Provisioning
     class Driver
+      include Chef::Mixin::DeepMerge
+
       # Hash containing all of the driver classes that have been loaded
       @drivers = {}
 
@@ -36,14 +38,16 @@ module Fragments
       end
 
       def machine_options(machine)
-        extra_machine_options(machine).merge(
-          convergence_options: {
-            chef_version: '12.4.1',
-            chef_config: ["log_location '/var/log/chef/client.log'",
-                          'log_level :info',
-                          'audit_mode :enabled'].join("\n")
-          }
-        )
+        # Options from the cluster resource
+        node = ::Chef.node
+        options = node.run_state['fragments']['cluster']['machine_options']
+        # Options from the Driver class
+        hash_only_merge!(options, extra_machine_options(machine))
+        # Options provided from fragment resources
+        machine.fragments.each do |fragment|
+          hash_only_merge!(options, fragment.machine_options)
+        end
+        options
       end
 
       # Returns the domain name that should be used for FQDNs
@@ -101,6 +105,11 @@ module Fragments
       # then override this method.  For instance, checking for hostname
       # collisions.
       def pre_verify(_packer)
+      end
+
+      # Allow a driver to set extra node attributes for each machine.
+      def extra_attributes(_machine)
+        {}
       end
     end
   end
