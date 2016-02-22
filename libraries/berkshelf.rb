@@ -62,6 +62,9 @@ module Fragments
       # in it's run_list
       def recipe_from_role(name)
         role = Chef::Search::Query.new.search(:role, "name:#{name}")[0][0]
+        if role.nil?
+          fail "Search for #{name} failed.  Has the role been created?"
+
         run_list = role.env_run_list[chef_environment]
         run_list.select { |rli| rli.type == :recipe }.map(&:name)
       end
