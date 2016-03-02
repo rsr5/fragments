@@ -111,7 +111,7 @@ class Machine
 
   # Returns the roles that will be needed by this machine
   def roles
-    @run_list.select { |rl| rl.start_with?('p_') || rl.start_with?('base_') }
+    @run_list.select { |rl| rl.start_with?('r_') ||rl.start_with?('p_') || rl.start_with?('base_') }
   end
 
   # Returns the recipes that will be needed by this machine
