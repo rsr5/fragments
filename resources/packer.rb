@@ -114,6 +114,12 @@ action :provision do
         # Set the fqdn for the machine
         attribute 'fqdn', [current_machine.name, Driver.get.domain].join('.')
         attribute 'hostname', current_machine.name
+        attribute 'host_aliases', lazy {
+          current_machine
+            .host_aliases
+            .select { |a| a != current_machine.name }
+            .map { |a| [a, Driver.get.domain].join('.') }
+        }
 
         # Do not converge the virtual machine yet
         converge false

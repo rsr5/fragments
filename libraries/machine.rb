@@ -5,7 +5,7 @@ require 'set'
 class Machine
   # Represents one virtual machine that will eventually be converged.
   attr_accessor :fragments, :memory, :memory_used, :run_list, :suffix, :tags,
-                :only_group_with_tags, :flavor_id, :environment
+                :only_group_with_tags, :flavor_id, :environment, :host_aliases
 
   def self.flavors
     {
@@ -30,6 +30,7 @@ class Machine
     machine.only_group_with_tags = fragment.only_group_with_tags.to_set
     machine.flavor_id = fragment.flavor_id
     machine.environment = fragment.environment
+    machine.host_aliases = fragment.host_aliases.to_set
     machine
   end
 
@@ -49,6 +50,7 @@ class Machine
     machine.only_group_with_tags = hash['only_group_with_tags'].to_set
     machine.flavor_id = hash['flavor_id']
     machine.environment = hash['environment']
+    machine.host_aliases = hash['host_aliases'].to_set
     machine
   end
 
@@ -88,6 +90,7 @@ class Machine
     @fragments << fragment
     @memory_used += fragment.memory_weight
     @tags += fragment.tags.to_set
+    @host_aliases += fragment.host_aliases.to_set
     @environment = fragment.environment
     @run_list = (@run_list.to_set + fragment.run_list.to_set).to_a
   end
@@ -140,6 +143,7 @@ class Machine
       flavor_id: @flavor_id,
       run_list: @run_list,
       environment: @environment,
+      host_aliases: @host_aliases.to_a,
       fragments: @fragments.map(&:to_hash)
     }
   end
