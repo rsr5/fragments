@@ -59,7 +59,9 @@ property :only_group_with_tags, Array, default: []
 
 # The flavor that should be used to create the virtual machine.  Flavors
 # define the amount of resources that a virtual machine should have assigned.
-property :flavor_id, String, default: '2'
+property :flavor_id,
+         String,
+         default: lazy { node['fragments']['default_flavor_id'] }
 
 # The environment that the virtual machine should have assigned
 property :environment,

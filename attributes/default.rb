@@ -10,6 +10,9 @@ default['fragments']['enable-packer-debugging'] = false
 # The default environment
 default['fragments']['default_environment'] = '_default'
 
+# the default flavor id to assign virtual machines
+default['fragments']['default_flavor_id'] = '2'
+
 # A hash of extra user defined flavors.
 default['fragments']['extra_flavors'] = {}
 
