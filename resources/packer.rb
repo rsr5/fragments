@@ -92,7 +92,7 @@ action :provision do
         chef_environment current_machine.environment
 
         # Used below to identify the nodes that are being converged
-        tag node['datasift-machine']['machine']['basename']
+        tag node.run_state['fragments']['cluster']['name']
 
         # Add the roles
         current_machine.roles.each do |role|

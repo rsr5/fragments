@@ -1,5 +1,6 @@
 
 require 'set'
+require 'chef/provisioning'
 
 # Module that contains a class to represent one virtual machine
 class Machine
@@ -114,7 +115,9 @@ class Machine
 
   # Returns the roles that will be needed by this machine
   def roles
-    @run_list.select { |rl| rl.start_with?('r_') ||rl.start_with?('p_') || rl.start_with?('base_') }
+    @run_list.select do |rl|
+      rl.start_with?('r_', 'p_', 'base_', 'os_', 'os-')
+    end
   end
 
   # Returns the recipes that will be needed by this machine
