@@ -58,6 +58,4 @@ used to the ideas.
 # Authors
 -------
 
-``fragments`` was written by `Robin Ridler
-<https://github.com/rsr5>`_, while working at `DataSift
-<https://github.com/datasift>`_.
+`fragments` was written by [Robin Ridler](https://github.com/rsr5>), while working at [DataSift](https://github.com/datasift)
