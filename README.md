@@ -55,3 +55,9 @@ There is more explanation below about the many variables that may be used to
 control the packing process.  However, a simle example will help in getting
 used to the ideas.
 
+# Authors
+-------
+
+``fragments`` was written by `Robin Ridler
+<https://github.com/rsr5>`_, while working at `DataSift
+<https://github.com/datasift>`_.
