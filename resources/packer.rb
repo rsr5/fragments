@@ -198,7 +198,7 @@ action :destroy do
 
   # Nodes to destroy
   nodes = search(:node,
-                 "tags:#{node['datasift-machine']['machine']['basename']}")
+                 "tags:#{node.run_state['fragments']['cluster']['name']}")
 
   # Destroy all of the virtual machines that are tagged with the basename
   # for this configuration
