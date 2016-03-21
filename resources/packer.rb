@@ -132,7 +132,7 @@ action :provision do
     block do
       MachinePacker.get.machines.each do |current_machine|
         attrs = Driver.get.extra_attributes(current_machine)
-        next unless attrs.size > 0
+        next if attrs.empty?
         node = search(:node, "name:#{current_machine.name}")[0]
         attrs.each do |key, value|
           node.normal[key] = value
@@ -164,7 +164,7 @@ end
 
 action :converge do
   machines = MachinePacker.get.machines
-  if new_resource.machines.size > 0
+  unless new_resource.machines.empty?
     machines = machines.select do |current_machine|
       new_resource.machines.include?(current_machine.name)
     end

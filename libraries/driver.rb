@@ -24,7 +24,7 @@ module Fragments
       def self.get
         unless @driver
           driver = ::Chef.node.run_state['fragments']['cluster']['driver']
-          fail "Unknown driver - #{driver}" unless @drivers.key?(driver)
+          raise "Unknown driver - #{driver}" unless @drivers.key?(driver)
           @driver = @drivers[driver].new
         end
         @driver
@@ -37,12 +37,16 @@ module Fragments
         configure
       end
 
-      def machine_options(machine)
-        # Options from the cluster resource
-        node = ::Chef.node
-        options = node.run_state['fragments']['cluster']['machine_options']
+      def machine_options(machine) # rubocop:disable Metrics/MethodLength
+        options = {}
         # Options from the Driver class
+        node = ::Chef.node
         hash_only_merge!(options, extra_machine_options(machine))
+        # Options from the cluster resource
+        hash_only_merge!(
+          options,
+          node.run_state['fragments']['cluster']['machine_options']
+        )
         # Options provided from fragment resources
         machine.fragments.each do |fragment|
           hash_only_merge!(options, fragment.machine_options)
@@ -84,20 +88,20 @@ module Fragments
       end
 
       def configure
-        fail 'Do not use the Driver class directly, it is intended that it '\
+        raise 'Do not use the Driver class directly, it is intended that it '\
              'should inherited from.'
       end
 
       # Returns the ip address associated with a virtual machine
       def ipaddr(_machine)
-        fail 'Do not use the Driver class directly, it is intended that it '\
+        raise 'Do not use the Driver class directly, it is intended that it '\
              'should be inherited from.'
       end
 
       # Returns the options that should be run in order to ssh to a virtual
       # machine
       def ssh_options(_machine)
-        fail 'Do not use the Driver class directly, it is intended that it '\
+        raise 'Do not use the Driver class directly, it is intended that it '\
              'should be inherited from.'
       end
 
